@@ -15,7 +15,7 @@ interface ISet {
   ttl?: number;
 }
 
-const set = ({ key, value, ttl = 3600 }: ISet) =>
+const set = ({ key, value, ttl = variables.DEFAULT_TIME_LIMIT_RATE }: ISet) =>
   redis.set(key, value, 'EX', ttl);
 
 const get = (key: string) => redis.get(key);

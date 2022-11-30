@@ -1,0 +1,25 @@
+FROM node:alpine
+
+ARG NODE_ENV
+ARG PORT
+ARG REDIS_HOST
+ARG REDIS_PORT
+ARG REDIS_PASSWORD
+
+ENV NODE_ENV=${NODE_ENV} \
+    PORT=${PORT} \
+    REDIS_HOST=${REDIS_HOST}\
+    REDIS_PORT=${REDIS_PORT}\
+    REDIS_PASSWORD=${REDIS_PASSWORD}
+
+WORKDIR /usr/app
+
+COPY . .
+
+RUN yarn install
+
+RUN yarn build
+
+CMD ["yarn", "start:prod"]
+
+EXPOSE ${PORT}

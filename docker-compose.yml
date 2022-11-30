@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes: 
+      - cache:/data
+  api:
+    container_name: outvio-api
+    build:
+      context: ./
+    image: outvio-api
+    depends_on:
+      - cache
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      PORT: ${PORT}
+      NODE_ENV: production
+      REDIS_HOST: cache
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    links:
+      - cache
+volumes:
+  cache:
+    driver: local
